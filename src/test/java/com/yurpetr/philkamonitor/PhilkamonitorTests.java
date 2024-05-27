@@ -1,10 +1,10 @@
-package com.yurpetr.springboot.logging;
+package com.yurpetr.philkamonitor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhilkamonitorApplicationTests {
+class PhilkamonitorTests {
 
 	@Test
 	void contextLoads() {

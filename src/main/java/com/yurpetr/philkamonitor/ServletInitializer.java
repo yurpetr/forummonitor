@@ -1,4 +1,4 @@
-package com.yurpetr.springboot.logging;
+package com.yurpetr.philkamonitor;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -7,7 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(PhilkamonitorApplication.class);
+		return application.sources(Philkamonitor.class);
 	}
 
 }

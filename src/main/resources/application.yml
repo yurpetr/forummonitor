@@ -4,4 +4,5 @@ spring:
 telegram:
   bot:
     token: ${BOT_TOKEN}
-    
+    chat_id: ${CHAT_ID}
+    name: ${BOT_NAME}

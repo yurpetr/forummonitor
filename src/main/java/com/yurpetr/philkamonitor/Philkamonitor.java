@@ -1,13 +1,13 @@
-package com.yurpetr.springboot.logging;
+package com.yurpetr.philkamonitor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PhilkamonitorApplication {
+public class Philkamonitor {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PhilkamonitorApplication.class, args);
+		SpringApplication.run(Philkamonitor.class, args);
 	}
 
 }

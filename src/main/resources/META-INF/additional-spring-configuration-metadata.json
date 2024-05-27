@@ -1,5 +1,17 @@
-{"properties": [{
-  "name": "telegram.bot.token",
-  "type": "java.lang.String",
-  "description": "Token of the telegram bot"
-}]}
+{"properties": [
+  {
+    "name": "telegram.bot.token",
+    "type": "java.lang.String",
+    "description": "Token of the telegram bot"
+  },
+  {
+    "name": "telegram.bot.chat_id",
+    "type": "java.lang.String",
+    "description": "Id of chat with user"
+  },
+  {
+    "name": "telegram.bot.name",
+    "type": "java.lang.String",
+    "description": "Bot username"
+  }
+]}

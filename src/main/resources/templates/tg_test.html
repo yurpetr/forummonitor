@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Send message to telegram</title>
+</head>
+<body>
+<body>
+  <h1>Send test message to telegram</h1>
+  <form action="#" th:action="@{/tg-send}" th:object="${textmessage}"
+    method="post">
+    <p>
+      Message: <input type="text" th:field="*{message}" />
+    </p>
+    <p>
+      <input type="submit" value="Send" /> <input type="reset"
+        value="Reset" />
+    </p>
+  </form>
+</body>
+</body>
+
+</html>
