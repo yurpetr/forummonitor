@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: philkamonitor
+telegram:
+  bot:
+    token: ${BOT_TOKEN}
+    
