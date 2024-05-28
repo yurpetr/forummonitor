@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yurpetr.philkamonitor.model.TextMessage;
 import com.yurpetr.philkamonitor.service.MessageSender;
+import com.yurpetr.philkamonitor.service.PhilkaChecker;
 
 @Controller
 public class TelegramTestController {
@@ -21,7 +22,8 @@ public class TelegramTestController {
 
 	@PostMapping("/tg-send")
 	public ModelAndView home(@ModelAttribute TextMessage message) {
-		MessageSender.sendMessage(message.getMessage());
+//		MessageSender.sendMessage(message.getMessage());
+		MessageSender.sendMessage("HTTP Connection status: " + String.valueOf(PhilkaChecker.checkPhilkaConnection()));
 		return new ModelAndView("redirect:/tg-test");
 	}
 
