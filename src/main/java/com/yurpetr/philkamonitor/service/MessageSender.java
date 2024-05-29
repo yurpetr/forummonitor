@@ -15,6 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MessageSender {
+	
+	private MessageSender() {
+	}
+
 	public static int sendMessage(String message) {
 		HttpResponse<String> response = null;
 
@@ -23,10 +27,12 @@ public class MessageSender {
 
 		UriBuilder builder = UriComponentsBuilder.fromUriString("https://api.telegram.org").path("/{token}/sendMessage")
 				.queryParam("chat_id", StaticPropertyHolder.getChatId()).queryParam("text", message)
-				.queryParam("parse_mode", "html");
+				.queryParam("parse_mode", "html").encode();
 
 		HttpRequest request = HttpRequest.newBuilder().GET()
-				.uri(builder.build("bot" + StaticPropertyHolder.getBotToken())).timeout(Duration.ofSeconds(5)).build();
+				.uri(builder.build("bot" + StaticPropertyHolder.getBotToken()))
+
+				.timeout(Duration.ofSeconds(5)).build();
 		try {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException ioe) {

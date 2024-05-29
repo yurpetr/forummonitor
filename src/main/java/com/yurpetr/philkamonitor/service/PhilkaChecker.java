@@ -1,8 +1,11 @@
 package com.yurpetr.philkamonitor.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
@@ -10,16 +13,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.yurpetr.philkamonitor.model.Post;
 import com.yurpetr.philkamonitor.utils.FileSaver;
 import com.yurpetr.philkamonitor.utils.PhilkaConstants;
 import com.yurpetr.philkamonitor.utils.PhilkaCookies;
+import com.yurpetr.philkamonitor.utils.PostParser;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PhilkaChecker {
 
-	public static int checkPhilkaConnection() {
+	private PhilkaChecker() {
+	}
+
+	public static String getLastPostWithKeys() {
 
 		Map<String, String> cookies = PhilkaCookies.getCookies();
 
@@ -38,30 +46,25 @@ public class PhilkaChecker {
 			log.info("\n{}", newPosts.head().text());
 
 			Elements postBlocks = newPosts.getElementsByClass("post_block");
-			StringBuilder stringBuilder = new StringBuilder();
+			StringBuilder fileContent = new StringBuilder();
+			List<Post> postList = new ArrayList<>();
 
 			for (Element postBlock : postBlocks) {
 				log.info("Post ID: {}", postBlock.id());
-				stringBuilder.append("Post ID: ");
-				stringBuilder.append(postBlock.id());
-				stringBuilder.append("\n");
-				stringBuilder.append("Sent at: ");
-				stringBuilder.append(postBlock.getElementsByClass("published").first().text());
-				stringBuilder.append("\n\n");
-				for (var element : postBlock.getElementsByClass("prettyprint")) {
-					stringBuilder.append(element.wholeText());
-					stringBuilder.append("\n\n");
-				}
-				stringBuilder.append("\n\n\n");
+				Optional<Post> postOptional = PostParser.parsePostBlock(postBlock);
+				postOptional.ifPresent(post -> {
+					fileContent.append(post.toString());
+					postList.add(post);
+				});
 			}
-			FileSaver.saveHtmlToFile(stringBuilder.toString(), "keys.txt");
+			FileSaver.saveTextToFile(fileContent.toString(), "keys.txt");
 
-			return response.statusCode();
+			return postList.getLast().toString();
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
 
-		return -1;
+		return "";
 	}
 
 }

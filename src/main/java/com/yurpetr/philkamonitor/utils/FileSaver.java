@@ -10,13 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileSaver {
 
-	public static void saveHtmlToFile(String html, String fileName) {
+	private FileSaver() {
+	}
+
+	public static void saveTextToFile(String text, String fileName) {
 
 		Path path = Paths.get("assets/" + fileName);
-		byte[] htmlBytes = html.getBytes();
+		byte[] textBytes = text.getBytes();
 
 		try {
-			Files.write(path, htmlBytes);
+			log.debug("Saving file assets/{}", fileName);
+			Files.write(path, textBytes);
 		} catch (IOException e) {
 			log.error("Failed to save file");
 		}

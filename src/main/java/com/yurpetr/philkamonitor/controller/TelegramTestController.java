@@ -23,7 +23,7 @@ public class TelegramTestController {
 	@PostMapping("/tg-send")
 	public ModelAndView home(@ModelAttribute TextMessage message) {
 //		MessageSender.sendMessage(message.getMessage());
-		MessageSender.sendMessage("HTTP Connection status: " + String.valueOf(PhilkaChecker.checkPhilkaConnection()));
+		MessageSender.sendMessage("<strong>Last post is:</strong>\n\n" + PhilkaChecker.getLastPostWithKeys());
 		return new ModelAndView("redirect:/tg-test");
 	}
 
