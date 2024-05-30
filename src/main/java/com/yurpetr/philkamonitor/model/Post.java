@@ -2,7 +2,7 @@ package com.yurpetr.philkamonitor.model;
 
 import java.time.OffsetDateTime;
 
-import com.yurpetr.philkamonitor.utils.PostExporter;
+import com.yurpetr.philkamonitor.utils.PostTransformer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return PostExporter.toString(this);
+		return PostTransformer.toString(this);
 	}
 
 	public static PostBuilder builder() {

@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.yurpetr.philkamonitor.model.Post;
+//import com.yurpetr.philkamonitor.utils.FileSaver;
 import com.yurpetr.philkamonitor.utils.PhilkaConstants;
 import com.yurpetr.philkamonitor.utils.PhilkaCookies;
 import com.yurpetr.philkamonitor.utils.PostParser;
@@ -32,19 +33,19 @@ public class PhilkaChecker {
 	private PhilkaChecker() {
 	}
 
-	@Scheduled(fixedDelay = 5, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
+	@Scheduled(fixedDelay = 5, initialDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public static void checkTopicForNewPosts() {
-
+		log.debug("Start scheduled task \"Check Philka.ru forum topic for new posts\"");
 		Map<String, String> cookies = PhilkaCookies.getCookies();
 
 		Map<String, String> headers = new HashMap<>();
 		headers.put("accept-encoding", "gzip, deflate");
-		Connection proxyfiedSession = PhilkaCookies.getProxyfiedSession();
+		Connection philkaSession = PhilkaCookies.getPhilkaSession();
 
 		try {
 			String url = PhilkaConstants.URL_TOPIC + PhilkaConstants.getTopicNumber() + "/"
 					+ PhilkaConstants.URL_NEW_POSTS;
-			Response response = proxyfiedSession.newRequest(url).cookies(cookies).method(Connection.Method.GET)
+			Response response = philkaSession.newRequest(url).cookies(cookies).method(Connection.Method.GET)
 					.userAgent(PhilkaConstants.USER_AGENT).referrer(PhilkaConstants.URL_FORUM).followRedirects(true)
 					.referrer(PhilkaConstants.URL_LOGIN).headers(headers).execute();
 			Document newPosts = response.parse();
@@ -61,6 +62,10 @@ public class PhilkaChecker {
 					postList.add(post);
 				});
 			}
+
+//			String textToSaveToFile = fileContent.toString();
+//			FileSaver.saveTextToFile(textToSaveToFile, "keys.txt");
+
 			postList.stream().forEach(PhilkaDatabaseSaver::savePostToDatabase);
 		} catch (IOException e) {
 			log.error(e.getMessage());

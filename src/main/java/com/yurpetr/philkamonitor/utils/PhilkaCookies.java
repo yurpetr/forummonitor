@@ -45,20 +45,23 @@ public class PhilkaCookies extends PhilkaConstants {
 				cookies = loginAndGetCookie(cookies);
 			}
 		} catch (IOException e) {
-			log.error("Something with cookies load");
+			log.error("Something wrong with server connection");
 		}
 		return cookies;
 	}
 
 	private static boolean checkExpiredCookies(Map<String, String> cookies) {
 		try {
-			Connection connection = getProxyfiedSession().newRequest(URL_USER_CP).userAgent(USER_AGENT).cookies(cookies)
+			Connection connection = getPhilkaSession().newRequest(URL_USER_CP).userAgent(USER_AGENT).cookies(cookies)
 					.headers(headers);
 			Response response = connection.execute();
 			if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+				log.debug("Forum return 'Forbidden' code");
+				log.debug("Saved cookies has expired");
 				return true;
 			}
 		} catch (HttpStatusException e) {
+			log.warn("HTTP status is not 200 while checking saved cookie");
 			return true;
 		} catch (IOException e) {
 			log.error("Something wrong while connecting to server");
@@ -66,12 +69,13 @@ public class PhilkaCookies extends PhilkaConstants {
 		return false;
 	}
 
-	public static Connection getProxyfiedSession() {
+	public static Connection getPhilkaSession() {
 
 		if (session == null) {
 			session = Jsoup.newSession();
 
 			if (isProxyEnabled()) {
+				log.debug("Setting up proxy for connect to server");
 				session.proxy(getProxyAddress(), getProxyPort()).auth(auth -> {
 					if (auth.isProxy()) {
 						return auth.credentials(getProxyUserName(), getProxyPassword());
@@ -84,38 +88,36 @@ public class PhilkaCookies extends PhilkaConstants {
 	}
 
 	private static Map<String, String> loginAndGetCookie(Map<String, String> cookies) throws IOException {
-		Map<String, String> mapCookies = new HashMap<>(cookies);
 
-		Connection.Response loginForm = getProxyfiedSession().newRequest(URL_LOGIN).userAgent(USER_AGENT)
-				.headers(headers).execute();
+		log.debug("Trying to get fresh cookies");
+		Map<String, String> mapCookies = new HashMap<>(cookies);
+		Connection.Response loginForm = getPhilkaSession().newRequest(URL_LOGIN).userAgent(USER_AGENT).headers(headers)
+				.execute();
 		mapCookies.putAll(loginForm.cookies());
 		storeCookies(mapCookies);
 
 		Document html = loginForm.parse();
 		String authToken = html.select("input[name=auth_key]").first().attr("value");
-		System.out.println("Found authToken: " + authToken);
-
+		log.debug("Found authToken: {}", authToken);
 		formData.put("auth_key", authToken);
 
-		System.out.println("cookies before login:");
-		System.out.println(mapCookies);
-		System.out.println(" Logged in cookie present? "
-				+ (mapCookies.containsKey(MEMBER_ID) && mapCookies.get(MEMBER_ID) != "0"));
+		log.debug("Logged in cookie present? {}",
+				String.valueOf((mapCookies.containsKey(MEMBER_ID) && mapCookies.get(MEMBER_ID) != "0")).toUpperCase());
 
-		Connection request = getProxyfiedSession().newRequest(URL_LOGIN_DO).cookies(mapCookies).headers(headers)
+		log.debug("Trying to login to forum");
+		Connection request = getPhilkaSession().newRequest(URL_LOGIN_DO).cookies(mapCookies).headers(headers)
 				.userAgent(USER_AGENT).data(formData).method(Connection.Method.POST).referrer(URL_FORUM);
 		Connection.Response afterLoginPage = request.execute();
 
-		System.out.println("cookies after login:");
-		System.out.println(mapCookies);
-		System.out.println(" Logged in cookie present? " + mapCookies.containsKey(MEMBER_ID));
-
 		mapCookies.putAll(afterLoginPage.cookies());
+		log.debug("Logged in cookie present? {}",
+				String.valueOf((mapCookies.containsKey(MEMBER_ID) && mapCookies.get(MEMBER_ID) != "0")).toUpperCase());
 		storeCookies(mapCookies);
 		return mapCookies;
 	}
 
 	private static Map<String, String> loadCookies() {
+		log.debug("Loading cookies from file");
 		Map<Object, Object> propertiesMap = new HashMap<>();
 		Map<String, String> cookies = new HashMap<>();
 		Properties cookiesProp = new Properties();
@@ -134,6 +136,7 @@ public class PhilkaCookies extends PhilkaConstants {
 	}
 
 	private static void storeCookies(Map<String, String> cookies) {
+		log.debug("Saving cookies to file");
 		Properties cookiesProp = new Properties();
 		cookiesProp.putAll(cookies);
 		try (FileOutputStream fos = new FileOutputStream(COOKIES_FILE)) {
