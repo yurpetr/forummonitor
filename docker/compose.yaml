@@ -1,0 +1,40 @@
+services:
+  npsapp:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM tomcat:10
+        COPY ROOT.war /usr/local/tomcat/webapps/
+    image: philka_monitor
+    mem_limit: 1024M
+    mem_reservation: 128M
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#        reservations:
+#          memory: 128M
+    hostname: nps
+    container_name: philkaapp
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "50"
+        tag: philkaapp
+    environment:
+      - BOT_NAME=${BOT_NAME}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - PHILKA_PASSWORD=${PHILKA_PASSWORD}
+      - PHILKA_USERNAME=${PHILKA_USERNAME}
+      - PROXY_ADDRESS=${PROXY_ADDRESS}
+      - PROXY_PASSWORD=${PROXY_PASSWORD}
+      - PROXY_PORT=${PROXY_PORT}
+      - PROXY_USERNAME=${PROXY_USERNAME}
+      - TOPIC_NUMBER=${TOPIC_NUMBER}
+    volumes:
+      - type: bind
+        source: ./db
+        target: /tmp/db

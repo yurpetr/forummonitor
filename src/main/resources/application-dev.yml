@@ -1,4 +1,9 @@
 logging:
   level:
-    com.yurpetr.philkamonitor: debug
-    
+    com.yurpetr: debug
+spring:
+  datasource:
+    url: jdbc:h2:file:./db/philka_posts
+forum:
+  philka:
+    cookies: "assets/philka.cookies"

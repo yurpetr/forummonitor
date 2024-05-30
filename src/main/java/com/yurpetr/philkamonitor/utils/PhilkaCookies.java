@@ -121,8 +121,8 @@ public class PhilkaCookies extends PhilkaConstants {
 		Map<Object, Object> propertiesMap = new HashMap<>();
 		Map<String, String> cookies = new HashMap<>();
 		Properties cookiesProp = new Properties();
-		if (new File(COOKIES_FILE).exists()) {
-			try (FileInputStream fis = new FileInputStream(COOKIES_FILE)) {
+		if (new File(getCookiesFileName()).exists()) {
+			try (FileInputStream fis = new FileInputStream(getCookiesFileName())) {
 				cookiesProp.load(fis);
 				propertiesMap = new HashMap<>(cookiesProp);
 				for (Map.Entry<Object, Object> entry : propertiesMap.entrySet()) {
@@ -139,7 +139,7 @@ public class PhilkaCookies extends PhilkaConstants {
 		log.debug("Saving cookies to file");
 		Properties cookiesProp = new Properties();
 		cookiesProp.putAll(cookies);
-		try (FileOutputStream fos = new FileOutputStream(COOKIES_FILE)) {
+		try (FileOutputStream fos = new FileOutputStream(getCookiesFileName())) {
 			cookiesProp.store(fos, null);
 		} catch (IOException e) {
 			e.printStackTrace();

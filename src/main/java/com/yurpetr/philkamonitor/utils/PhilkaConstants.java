@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PhilkaConstants {
-	public static final String COOKIES_FILE = "assets/philka.cookies";
 	public static final String URL_ORIGIN = "https://philka.ru/";
 	public static final String URL_FORUM = "https://philka.ru/forum/";
 	public static final String URL_TOPIC = "https://philka.ru/forum/topic/";
@@ -22,6 +21,7 @@ public class PhilkaConstants {
 	private static String PROXY_USERNAME;
 	private static String PROXY_PASSWORD;
 
+	private static String COOKIES_FILE;
 	private static String IPS_USERNAME;
 	private static String IPS_PASSWORD;
 	private static int TOPIC_NUMBER;
@@ -29,7 +29,7 @@ public class PhilkaConstants {
 	public static boolean isProxyEnabled() {
 		return PROXY_ENABLED;
 	}
-	
+
 	public static String getProxyAddress() {
 		return PROXY_ADDRESS;
 	}
@@ -44,6 +44,10 @@ public class PhilkaConstants {
 
 	public static String getProxyPassword() {
 		return PROXY_PASSWORD;
+	}
+
+	public static String getCookiesFileName() {
+		return COOKIES_FILE;
 	}
 
 	public static String getIpsUserName() {
@@ -62,7 +66,7 @@ public class PhilkaConstants {
 	public void setProxyEnabled(boolean proxyEnabled) {
 		PROXY_ENABLED = proxyEnabled;
 	}
-	
+
 	@Value("${proxy.address}")
 	public void setProxyAddress(String proxyAddress) {
 		PROXY_ADDRESS = proxyAddress;
@@ -81,6 +85,11 @@ public class PhilkaConstants {
 	@Value("${proxy.password}")
 	public void setProxyPassword(String proxyPassword) {
 		PROXY_PASSWORD = proxyPassword;
+	}
+
+	@Value("${forum.philka.cookies}")
+	public void setCookiesFileName(String cookiesFileName) {
+		COOKIES_FILE = cookiesFileName;
 	}
 
 	@Value("${forum.philka.username}")

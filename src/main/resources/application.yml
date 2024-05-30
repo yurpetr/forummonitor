@@ -2,7 +2,7 @@ spring:
   application:
     name: philkamonitor
   datasource:
-    url: jdbc:h2:file:./db/philka_posts
+    url: jdbc:h2:file:/tmp/db/philka_posts
     username: sa
     password:
     driverClassName: org.h2.Driver
@@ -13,6 +13,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+logging:
+  level:
+    com.yurpetr: debug
 telegram:
   bot:
     token: ${BOT_TOKEN}
@@ -23,6 +26,7 @@ forum:
     username: ${PHILKA_USERNAME}
     password: ${PHILKA_PASSWORD}
     topic: ${TOPIC_NUMBER}
+    cookies: "/tmp/philka.cookies"
 proxy:
   enabled: true
   address: ${PROXY_ADDRESS}
