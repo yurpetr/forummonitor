@@ -1,6 +1,18 @@
 spring:
   application:
     name: philkamonitor
+  datasource:
+    url: jdbc:h2:file:./db/philka_posts
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    hibernate:
+      ddl-auto: update
 telegram:
   bot:
     token: ${BOT_TOKEN}
@@ -16,3 +28,8 @@ proxy:
   port: ${PROXY_PORT}
   username: ${PROXY_USERNAME}
   password: ${PROXY_PASSWORD}
+hibernate:
+  hbm2ddl:
+    auto: create-drop
+
+    

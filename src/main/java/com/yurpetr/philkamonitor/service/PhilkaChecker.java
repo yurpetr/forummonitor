@@ -12,6 +12,8 @@ import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.yurpetr.philkamonitor.model.Post;
 import com.yurpetr.philkamonitor.utils.FileSaver;
@@ -19,9 +21,11 @@ import com.yurpetr.philkamonitor.utils.PhilkaConstants;
 import com.yurpetr.philkamonitor.utils.PhilkaCookies;
 import com.yurpetr.philkamonitor.utils.PostParser;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
 public class PhilkaChecker {
 
 	private PhilkaChecker() {
@@ -58,6 +62,8 @@ public class PhilkaChecker {
 				});
 			}
 			FileSaver.saveTextToFile(fileContent.toString(), "keys.txt");
+
+			postList.stream().forEach(PhilkaDatabaseSaver::savePostToDatabase);
 
 			return postList.getLast().toString();
 		} catch (IOException e) {

@@ -18,7 +18,7 @@ public class PostParser {
 	}
 
 	public static Optional<Post> parsePostBlock(Element postBlock) {
-		PostBuilder postBuilder = Post.getPostBuilder();
+		PostBuilder postBuilder = Post.builder();
 
 		Element linkBlock = postBlock.getElementsByAttribute("data-entry-pid").first();
 		postBuilder.setLink(linkBlock.attr("href"));

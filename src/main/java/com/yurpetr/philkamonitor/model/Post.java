@@ -4,15 +4,29 @@ import java.time.OffsetDateTime;
 
 import com.yurpetr.philkamonitor.utils.PostExporter;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Data
+@Entity
+@Table(name = "posts", uniqueConstraints = @UniqueConstraint(columnNames = "postId"))
 public class Post {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Column(unique = true)
 	private int postId;
 	private OffsetDateTime publishTime;
+
+	@Column(columnDefinition = "TEXT")
 	private String keys;
 	private String link;
 
@@ -31,7 +45,7 @@ public class Post {
 		return PostExporter.toString(this);
 	}
 
-	public static PostBuilder getPostBuilder() {
+	public static PostBuilder builder() {
 		return new PostBuilder();
 	}
 
