@@ -21,13 +21,21 @@ public class PostService {
 	}
 
 	public Post savePost(Post post) {
+		log.debug("Saving new post to DB");
+		return postRepository.save(post);
+	}
+
+	public Post savePostIfNotExists(Post post) {
 		List<Post> postsByPostId = postRepository.findByPostId(post.getPostId());
 		if (postsByPostId.isEmpty()) {
-			log.debug("Saving new post to DB");
-			return postRepository.save(post);
+			log.debug("Saving new post with ID \"{}\" to DB", post.getPostId());
+			Post savedPost = postRepository.save(post);
+			MessageSender.sendMessage("<strong>Last post is:</strong>\n\n" + savedPost.toString());
+			return savedPost;
 		}
-		log.warn("Post already exist in DB");
+		log.warn("Post with ID \"{}\" already exist in DB", postsByPostId.getFirst().getPostId());
 		return postsByPostId.getFirst();
+
 	}
 
 	public Optional<Post> getPostById(Long id) {

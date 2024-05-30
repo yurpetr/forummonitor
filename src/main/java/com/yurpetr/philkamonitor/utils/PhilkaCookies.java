@@ -69,12 +69,16 @@ public class PhilkaCookies extends PhilkaConstants {
 	public static Connection getProxyfiedSession() {
 
 		if (session == null) {
-			session = Jsoup.newSession().proxy(getProxyAddress(), getProxyPort()).auth(auth -> {
-				if (auth.isProxy()) {
-					return auth.credentials(getProxyUserName(), getProxyPassword());
-				}
-				return auth.credentials(getIpsUserName(), getIpsPassword());
-			});
+			session = Jsoup.newSession();
+
+			if (isProxyEnabled()) {
+				session.proxy(getProxyAddress(), getProxyPort()).auth(auth -> {
+					if (auth.isProxy()) {
+						return auth.credentials(getProxyUserName(), getProxyPassword());
+					}
+					return auth.credentials(getIpsUserName(), getIpsPassword());
+				});
+			}
 		}
 		return session;
 	}

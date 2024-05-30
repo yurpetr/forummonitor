@@ -24,7 +24,7 @@ public class PhilkaDatabaseSaver {
 	}
 
 	public static void savePostToDatabase(Post post) {
-		service.savePost(post);
+		service.savePostIfNotExists(post);
 	}
 
 }

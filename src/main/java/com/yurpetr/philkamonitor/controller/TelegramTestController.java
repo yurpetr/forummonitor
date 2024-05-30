@@ -22,8 +22,7 @@ public class TelegramTestController {
 
 	@PostMapping("/tg-send")
 	public ModelAndView home(@ModelAttribute TextMessage message) {
-//		MessageSender.sendMessage(message.getMessage());
-		MessageSender.sendMessage("<strong>Last post is:</strong>\n\n" + PhilkaChecker.getLastPostWithKeys());
+		MessageSender.sendMessage(message.getMessage());
 		return new ModelAndView("redirect:/tg-test");
 	}
 

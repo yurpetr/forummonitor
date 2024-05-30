@@ -22,8 +22,9 @@ forum:
   philka:
     username: ${PHILKA_USERNAME}
     password: ${PHILKA_PASSWORD}
-    topic: 47480
+    topic: ${TOPIC_NUMBER}
 proxy:
+  enabled: true
   address: ${PROXY_ADDRESS}
   port: ${PROXY_PORT}
   username: ${PROXY_USERNAME}

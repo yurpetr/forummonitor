@@ -16,6 +16,7 @@ public class PhilkaConstants {
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0";
 	public static final String MEMBER_ID = "member_id";
 
+	private static boolean PROXY_ENABLED;
 	private static String PROXY_ADDRESS;
 	private static int PROXY_PORT;
 	private static String PROXY_USERNAME;
@@ -25,6 +26,10 @@ public class PhilkaConstants {
 	private static String IPS_PASSWORD;
 	private static int TOPIC_NUMBER;
 
+	public static boolean isProxyEnabled() {
+		return PROXY_ENABLED;
+	}
+	
 	public static String getProxyAddress() {
 		return PROXY_ADDRESS;
 	}
@@ -53,6 +58,11 @@ public class PhilkaConstants {
 		return TOPIC_NUMBER;
 	}
 
+	@Value("${proxy.enabled}")
+	public void setProxyEnabled(boolean proxyEnabled) {
+		PROXY_ENABLED = proxyEnabled;
+	}
+	
 	@Value("${proxy.address}")
 	public void setProxyAddress(String proxyAddress) {
 		PROXY_ADDRESS = proxyAddress;

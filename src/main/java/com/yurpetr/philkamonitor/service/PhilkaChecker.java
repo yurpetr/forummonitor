@@ -6,32 +6,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.yurpetr.philkamonitor.model.Post;
-import com.yurpetr.philkamonitor.utils.FileSaver;
 import com.yurpetr.philkamonitor.utils.PhilkaConstants;
 import com.yurpetr.philkamonitor.utils.PhilkaCookies;
 import com.yurpetr.philkamonitor.utils.PostParser;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@EnableScheduling
 public class PhilkaChecker {
 
 	private PhilkaChecker() {
 	}
 
-	public static String getLastPostWithKeys() {
+	@Scheduled(fixedDelay = 5, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
+	public static void checkTopicForNewPosts() {
 
 		Map<String, String> cookies = PhilkaCookies.getCookies();
 
@@ -46,31 +48,24 @@ public class PhilkaChecker {
 					.userAgent(PhilkaConstants.USER_AGENT).referrer(PhilkaConstants.URL_FORUM).followRedirects(true)
 					.referrer(PhilkaConstants.URL_LOGIN).headers(headers).execute();
 			Document newPosts = response.parse();
-//			FileSaver.saveHtmlToFile(newPosts.html());
-			log.info("\n{}", newPosts.head().text());
+			log.debug("Checking forum topic\n{}", newPosts.head().text());
 
 			Elements postBlocks = newPosts.getElementsByClass("post_block");
 			StringBuilder fileContent = new StringBuilder();
 			List<Post> postList = new ArrayList<>();
 
 			for (Element postBlock : postBlocks) {
-				log.info("Post ID: {}", postBlock.id());
 				Optional<Post> postOptional = PostParser.parsePostBlock(postBlock);
 				postOptional.ifPresent(post -> {
 					fileContent.append(post.toString());
 					postList.add(post);
 				});
 			}
-			FileSaver.saveTextToFile(fileContent.toString(), "keys.txt");
-
 			postList.stream().forEach(PhilkaDatabaseSaver::savePostToDatabase);
-
-			return postList.getLast().toString();
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
 
-		return "";
 	}
 
 }

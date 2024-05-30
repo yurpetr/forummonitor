@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduledSender {
 	private int counter = 0;
 
-	@Scheduled(fixedDelay = 5000)
 	public void doSomething() {
 		counter++;
 		log.info("Do something: {}", counter);
